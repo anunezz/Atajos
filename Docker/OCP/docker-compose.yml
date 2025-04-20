@@ -14,10 +14,39 @@ services:
       - php
       - mysql
       - phpmyadmin
-      #- postgres
+      - postgres
     #extra_hosts:
       #- "host.docker.internal:172.18.7.73"
       #- "host.docker.internal:192.168.0.75"
+    networks:
+      - networkapp
+
+  postgres:
+    image: postgres:13
+    container_name: postgres-ocp
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: seatsa_ocp
+      POSTGRES_USER: seatsa_user
+      POSTGRES_PASSWORD: temporal
+    ports:
+      - "5433:5432"
+    networks:
+        - networkapp
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-ocp
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: adriano_alanis@hotmail.com
+      PGADMIN_DEFAULT_PASSWORD: temporal
+    depends_on:
+      - postgres
     networks:
       - networkapp
   mysql:
@@ -49,19 +78,6 @@ services:
       - networkapp
     depends_on:
       - mysql
-
-  # postgres:
-  #   image: 'postgres:latest'
-  #   container_name: posgrest
-  #   restart: always
-  #   volumes:
-  #   - './postgres_data:/var/lib/postgresql/data'
-  #   environment:
-  #   - POSTGRES_DB=posgrest
-  #   - POSTGRES_PASSWORD=secret
-  #   ports:
-  #   - '5432:5432'
-
   php:
     build:
       args:
@@ -90,4 +106,5 @@ networks:
 
 volumes:
   dbocp:
+  postgres_data:
     
