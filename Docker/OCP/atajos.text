@@ -1,0 +1,2 @@
+UPDATE usuarios
+SET contra = "$2y$10$tQgXA6FG5z7HqOu0A1ux7utLbn.u6kVZGPX3isXRP9JFfhTEVbB4y";

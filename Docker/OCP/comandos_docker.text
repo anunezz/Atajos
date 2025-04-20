@@ -1,0 +1,86 @@
+//Construyendo una imagen
+docker build --tag imagen-dictec:primera .
+
+//listar o mostrar imagenes
+docker images
+
+//ejecutar apache
+curl localhost:8081
+
+//mostrar todo el historial de lo que se ha instalado en una imagen
+docker history -H imagen-dictec
+
+//ejecutar la imagen
+docker run -d --name apache imagen-dictec:primera
+
+// Contenedores
+docker ps
+
+//eliminar la ejecucion del docker ps
+docker rm -fv apache
+
+//correr apache desde un puerto
+docker run -d --name apache -p 81:80 imagen-dictec:primera
+
+//COPY
+COPY (carpeta de tu proyecto) /var/www/html
+
+//RUN echo "Dockerfile Test on Apache2" > /var/www/html/index.html
+
+
+
+//! primer paso installar mysql
+docker pull mysql:5.7
+docker pull php:7.0-apache
+
+//corriendo mysql
+docker run -p 3306:3306 --name basedatos -v /home/adriann/Escritorio/servicioweb/database:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=adrian -d mysql:5.7
+
+//corriendo php
+docker run -p 9090:80 -v /home/adriann/Escritorio/servicioweb:/var/www/html --name miservidorphp -d --link basedatos  php:7.0-apache
+
+//acceder
+locahost:9090
+
+docker exec -i -t basedatos /bin/bash
+// ingresaremos como a una terminal
+mysql -uroot -p
+
+//nos pedira password === adrian
+show databases;
+
+//crear base de datos usuarios;
+create database usuarios;
+
+
+
+//DOCKER SE ELIMINARAN LOS DATOS 
+docker-compose down --volumes
+docker volume prune
+docker-compose up -d
+
+/// NUEVA CONFIGURACION
+docker-compose build
+
+//Levantar todos los servicios contenedores
+cd ~/code/dictec
+docker-compose up
+
+// mostrar activos contenedores
+docker ps
+
+//ELiminar todos los contenedores
+docker ps -q | xargs docker rm -f
+
+//entrar a los archivos del contenedor
+docker-compose exec apppsm bash
+
+7.2.22
+
+//ver todas las espicificaciones de la maquina
+docker inspect mysql
+
+//Si no puedes detener los conntenedores con permisos aplicar esto
+sudo aa-remove-unknown
+sudo systemctl restart docker.service
+ https://www.enmimaquinafunciona.com/pregunta/170598/El-contenedor-Docker-no-se-detiene
