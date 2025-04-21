@@ -56,6 +56,7 @@ create database usuarios;
 
 //DOCKER SE ELIMINARAN LOS DATOS 
 docker-compose down --volumes
+docker-compose build --no-cache
 docker volume prune
 docker-compose up -d
 
@@ -84,3 +85,10 @@ docker inspect mysql
 sudo aa-remove-unknown
 sudo systemctl restart docker.service
  https://www.enmimaquinafunciona.com/pregunta/170598/El-contenedor-Docker-no-se-detiene
+
+
+ //REINICIAR DOCKER
+ sudo systemctl restart docker
+
+//Limpia DNS cache de systemd:
+sudo systemd-resolve --flush-caches

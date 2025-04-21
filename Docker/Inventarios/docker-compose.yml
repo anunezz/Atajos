@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx2-inventarios
+    ports:
+      - 8020:80
+    volumes:
+      - .:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - networkapp
+
+  postgres:
+    image: postgres:13
+    container_name: postgres-inventarios
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: inventarios
+      POSTGRES_USER: inventarios_user
+      POSTGRES_PASSWORD: temporal
+    ports:
+      - "5434:5432"
+    networks:
+      - networkapp
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-inventarios
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: adriano_alanis@hotmail.com
+      PGADMIN_DEFAULT_PASSWORD: temporal
+    depends_on:
+      - postgres
+    networks:
+      - networkapp
+
+  php:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        user: laraveluser
+        uid: 1000
+    image: php-inventarios
+    container_name: php-inventarios
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:80"
+    depends_on:
+      - postgres
+    environment:
+      APACHE_RUN_USER: www-data
+      APACHE_RUN_GROUP: www-data
+    networks:
+      - networkapp
+
+networks:
+  networkapp:
+
+volumes:
+  postgres_data:
