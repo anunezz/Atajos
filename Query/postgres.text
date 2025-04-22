@@ -1,0 +1,5 @@
+Para exportar una base de datos abres una terminal en la ubicacion ahi se descargara el sql
+PGPASSWORD="temporal" pg_dump -U adriann -w -h localhost inventarios > inventarios_prueba.sql
+
+Para importar una base de datos desde una terminal es:
+PGPASSWORD="temporal" psql -U adriann -h localhost -d inventarios -f /home/adrian/Descargas/PROD-inventarios_140425_123029.sql 
