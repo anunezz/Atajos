@@ -1,3 +1,17 @@
+conceder permisos
+sudo -u postgres psql
+ALTER USER adriann CREATEDB;
+
+listar una base de datos
+PGPASSWORD=temporal psql -h localhost -p 5432 -U adriann -l
+
+crear una base de datos
+PGPASSWORD="temporal" psql -h localhost -p 5432 -U adriann -d postgres -c "SELECT 'CREATE DATABASE inventarios' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'inventarios')"
+sudo -u postgres createdb -O adriann inventarios
+
+Borrar una base de datos
+PGPASSWORD="temporal" psql -h localhost -p 5432 -U adriann -d postgres -c "DROP DATABASE IF EXISTS inventarios WITH (FORCE);"
+
 Para exportar una base de datos abres una terminal en la ubicacion ahi se descargara el sql
 PGPASSWORD="temporal" pg_dump -U adriann -w -h localhost inventarios > inventarios_prueba.sql
 

@@ -1,0 +1,59 @@
+
+//Guarda el archivo de configuración
+sudo nano /etc/apache2/sites-available/inventarios-api.conf
+
+<VirtualHost *:80>
+    DocumentRoot "/var/www/inventarios-api/public"
+    DirectoryIndex index.php
+    ServerName inventarios-api.sre.gob.mx
+
+    Alias /inventarios-api "/var/www/inventarios-api/public"
+
+    <Directory "/var/www/inventarios-api/public">
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+
+//Habilita el sitio y el módulo rewrite
+sudo a2ensite inventarios-api.conf
+sudo a2enmod rewrite
+
+
+
+
+//Verifica permisos del proyecto Laravel
+Laravel necesita que estas carpetas sean escribibles por Apache:
+
+sudo chown -R www-data:www-data /var/www/inventarios
+sudo chmod -R 775 /var/www/inventarios/storage
+sudo chmod -R 775 /var/www/inventarios/bootstrap/cache
+
+//Alternativa si también necesitas trabajar desde tu usuario (adrian)
+sudo chown -R adrian:www-data /var/www/inventarios-api
+sudo chmod -R 775 /var/www/inventarios-api/storage
+sudo chmod -R 775 /var/www/inventarios-api/bootstrap/cache
+
+sudo usermod -a -G www-data adrian
+newgrp www-data
+
+
+//Verificar si tiene apache php8.2
+echo "<?php phpinfo(); ?>" | sudo tee /var/www/inventarios-api/public/info.php
+http://inventarios-api.sre.gob.mx/info.php
+
+
+//Solución: Habilitar el módulo headers
+sudo a2enmod headers
+sudo systemctl restart apache2
+
+
+//Agregar la URL personalizada al archivo hosts
+Edita tu archivo /etc/hosts:
+
+sudo nano /etc/hosts
+127.0.0.1   inventarios-api.sre.gob.mx
+
+probar url: http://inventarios-api.sre.gob.mx
+
